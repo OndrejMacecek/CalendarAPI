@@ -1,4 +1,4 @@
-﻿using CalendarAPI.Domain.Calendars.Entities;
+﻿using CalendarAPI.Domain.Calendars.Aggregates;
 using CalendarAPI.Domain.Common;
 
 namespace CalendarAPI.Domain.Calendars.Repositories;

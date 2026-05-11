@@ -1,7 +1,7 @@
 ﻿using CalendarAPI.Application.Calendars.UnitOfWorks;
 using CalendarAPI.Application.Common.Messaging;
 using CalendarAPI.Application.Common.Results;
-using CalendarAPI.Domain.Calendars.Entities;
+using CalendarAPI.Domain.Calendars.Aggregates;
 
 namespace CalendarAPI.Application.Commands.Handlers;
 
@@ -17,10 +17,14 @@ public sealed class CreateCalendarCommandHandler
     }
     public async Task<Result<Guid>> Handle(CreateCalendarCommand request, CancellationToken cancellationToken)
     {
-        var calendarResult = Calendar.Create(request.Calendar.Name);
+        var calendarResult = Calendar.Create(Guid.NewGuid(), request.Calendar.Name);
 
         if (calendarResult.IsFailure)
-            return Result<Guid>.Failure(calendarResult.Error!);
+        {
+            return Result<Guid>.Failure(new Error(
+                calendarResult.Error!.Code,
+                calendarResult.Error.Message));
+        }
 
         var calendar = calendarResult.Value!;
 

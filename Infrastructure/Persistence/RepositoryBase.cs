@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CalendarAPI.Infrastructure.Persistence;
 public abstract class BaseRepository<TDomain, TEntity> : IRepository<TDomain>
-    where TDomain : DomainBase
+    where TDomain : DomainEntity
     where TEntity : DbEntity
 {
     protected readonly AppDbContext Context;

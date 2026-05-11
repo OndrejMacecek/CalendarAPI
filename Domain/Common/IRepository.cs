@@ -1,6 +1,6 @@
 ﻿namespace CalendarAPI.Domain.Common;
 public interface IRepository<TDomain>
-    where TDomain : DomainBase
+    where TDomain : DomainEntity
 {
     Task AddAsync(TDomain domainObject, CancellationToken cancellationToken);
 

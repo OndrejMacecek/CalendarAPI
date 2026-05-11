@@ -1,12 +1,14 @@
 ﻿namespace CalendarAPI.Application.Common.Results;
 
+public sealed record Error(string Code, string Message);
+
 public class Result
 {
     public bool IsSuccess { get; }
     public bool IsFailure => !IsSuccess;
-    public string? Error { get; }
+    public Error? Error { get; }
 
-    protected Result(bool isSuccess, string? error)
+    protected Result(bool isSuccess, Error? error)
     {
         IsSuccess = isSuccess;
         Error = error;
@@ -15,16 +17,15 @@ public class Result
     public static Result Success()
         => new(true, null);
 
-    public static Result Failure(string error)
+    public static Result Failure(Error error)
         => new(false, error);
 }
 
-public class Result<T> 
-    : Result
+public sealed class Result<T> : Result
 {
     public T? Value { get; }
 
-    private Result(bool isSuccess, T? value, string? error)
+    private Result(bool isSuccess, T? value, Error? error)
         : base(isSuccess, error)
     {
         Value = value;
@@ -33,6 +34,6 @@ public class Result<T>
     public static Result<T> Success(T value)
         => new(true, value, null);
 
-    public static new Result<T> Failure(string error)
+    public static new Result<T> Failure(Error error)
         => new(false, default, error);
 }

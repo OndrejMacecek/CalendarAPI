@@ -2,6 +2,7 @@
 using CalendarAPI.Domain.Calendars.Repositories;
 using CalendarAPI.Infrastructure.Calendars.Repositories;
 using CalendarAPI.Infrastructure.Calendars.UnitOfWorks;
+using CalendarAPI.Infrastructure.Common;
 using CalendarAPI.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +13,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddScoped<ITimeProvider, SnapshotTimeProvider>();
+
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
 

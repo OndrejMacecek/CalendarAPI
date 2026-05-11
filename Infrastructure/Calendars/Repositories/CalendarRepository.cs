@@ -1,4 +1,4 @@
-﻿using CalendarAPI.Domain.Calendars.Entities;
+﻿using CalendarAPI.Domain.Calendars.Aggregates;
 using CalendarAPI.Domain.Calendars.Repositories;
 using CalendarAPI.Infrastructure.Calendars.Entities;
 using CalendarAPI.Infrastructure.Persistence;
@@ -25,7 +25,8 @@ public sealed class CalendarRepository
     {
         return Calendar.Rehydrate(
             entity.Id,
-            entity.Name);
+            Guid.NewGuid(),
+            entity.Name, "UTC");
     }
 
     protected override void MapToExistingEntity(Calendar domainObject, CalendarEntity entity)
