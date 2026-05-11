@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Domain\CalendarAPP.Domain\CalendarAPI.Domain.csproj" />
+    <ProjectReference Include="..\..\Domain\CalendarAPI.Domain\CalendarAPI.Domain.csproj" />
   </ItemGroup>
 
 </Project>
