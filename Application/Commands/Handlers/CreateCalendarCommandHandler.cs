@@ -4,6 +4,7 @@ using CalendarAPI.Application.Common.Results;
 using CalendarAPI.Domain.Calendars.Entities;
 
 namespace CalendarAPI.Application.Commands.Handlers;
+
 public sealed class CreateCalendarCommandHandler
     : ICommandHandler<CreateCalendarCommand, Guid>
 {
