@@ -21,6 +21,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalendarAPI.Application", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalendarAPI.Domain", "Domain\CalendarAPI.Domain.csproj", "{4B49E40B-29FA-0095-463D-0AE021C12087}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contract", "Contract", "{14A09441-971E-44AE-BA66-554CC259C5B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalendarApi.Contract", "Contract\CalendarApi.Contract\CalendarApi.Contract.csproj", "{71B6F6E7-D8A0-4B6E-B615-C79B2B79C870}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +51,10 @@ Global
 		{4B49E40B-29FA-0095-463D-0AE021C12087}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B49E40B-29FA-0095-463D-0AE021C12087}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B49E40B-29FA-0095-463D-0AE021C12087}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71B6F6E7-D8A0-4B6E-B615-C79B2B79C870}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71B6F6E7-D8A0-4B6E-B615-C79B2B79C870}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71B6F6E7-D8A0-4B6E-B615-C79B2B79C870}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71B6F6E7-D8A0-4B6E-B615-C79B2B79C870}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,6 +64,7 @@ Global
 		{395C6172-C27C-7623-6DFC-E20654C99BB1} = {DD4A460C-CAFC-4A88-88DE-106E746110BD}
 		{8180A91A-8572-F6D0-AA1D-200E0DBFF86C} = {BE4E6F11-D4B4-47B3-8588-F73759817D6A}
 		{4B49E40B-29FA-0095-463D-0AE021C12087} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{71B6F6E7-D8A0-4B6E-B615-C79B2B79C870} = {14A09441-971E-44AE-BA66-554CC259C5B5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1676744D-2FEC-4C99-83D4-05741FF5812E}

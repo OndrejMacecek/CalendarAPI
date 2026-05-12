@@ -1,4 +1,6 @@
-﻿namespace CalendarAPI.Application.Common.Results;
+﻿using CalendarAPI.Domain.Common;
+
+namespace CalendarAPI.Application.Common.Results;
 
 public sealed record Error(string Code, string Message);
 
@@ -36,4 +38,17 @@ public sealed class Result<T> : Result
 
     public static new Result<T> Failure(Error error)
         => new(false, default, error);
+}
+
+public static class ResultExtensions
+{
+    public static Result<T> ToApplicationFailure<T>(this DomainError error)
+    {
+        return Result<T>.Failure(new Error(error.Code, error.Message));
+    }
+
+    public static Result ToApplicationFailure(this DomainError error)
+    {
+        return Result.Failure(new Error(error.Code, error.Message));
+    }
 }

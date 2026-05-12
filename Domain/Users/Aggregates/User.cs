@@ -12,7 +12,10 @@ public sealed class User
     private User(Guid id) 
         : base(id) { }
 
-    public static DomainResult<User> Create(string email, string displayName, Guid? id = null)
+    public static DomainResult<User> Create(
+        string email, 
+        string displayName, 
+        Guid? id = null)
     {
         var emailResult = EmailAddress.Create(email);
 

@@ -88,4 +88,89 @@ public sealed class CalendarEvent
 
         return calendarEvent;
     }
+
+    public DomainResult InviteParticipant(Guid userId)
+    {
+        if (userId == Guid.Empty)
+        {
+            return DomainResult.Failure(
+                new DomainError("event.invalid_participant", "Participant id is invalid."));
+        }
+
+        if (_participants.Any(x => x.UserId == userId))
+        {
+            return DomainResult.Failure(
+                new DomainError("event.participant_already_exists", "Participant already exists."));
+        }
+
+        _participants.Add(EventParticipant.Create(Id, userId));
+
+        return DomainResult.Success();
+    }
+
+    public DomainResult AcceptInvitation(Guid userId)
+    {
+        var participant = _participants.FirstOrDefault(x => x.UserId == userId);
+
+        if (participant is null)
+        {
+            return DomainResult.Failure(
+                new DomainError("invitation.not_found", "Invitation was not found."));
+        }
+
+        participant.Accept();
+
+        return DomainResult.Success();
+    }
+
+    public DomainResult DeclineInvitation(Guid userId)
+    {
+        var participant = _participants.FirstOrDefault(x => x.UserId == userId);
+
+        if (participant is null)
+        {
+            return DomainResult.Failure(
+                new DomainError("invitation.not_found", "Invitation was not found."));
+        }
+
+        participant.Decline();
+
+        return DomainResult.Success();
+    }
+
+    public DomainResult Update(
+        Guid eventTypeId,
+        string title,
+        string? description,
+        DateTimeOffset startAtUtc,
+        DateTimeOffset endAtUtc,
+        IReadOnlyCollection<Guid> participantIds)
+    {
+
+        var timeRangeResult = EventTimeRange.Create(startAtUtc, endAtUtc);
+
+        if (timeRangeResult.IsFailure)
+        {
+            return DomainResult<CalendarEvent>.Failure(timeRangeResult.Error!);
+        }
+
+        TimeRange = timeRangeResult.Value!;
+        EventTypeId = eventTypeId;
+        Title = title.Trim();
+        Description = string.IsNullOrWhiteSpace(description) ? null : description.Trim();
+
+        var desiredIds = participantIds.Distinct().ToHashSet();
+
+        _participants.RemoveAll(p => !desiredIds.Contains(p.UserId));
+
+        var existingIds = Participants.Select(p => p.UserId).ToHashSet();
+
+        foreach (var participantId in desiredIds.Except(existingIds))
+        {
+            _participants.Add(
+                EventParticipant.Create(Id, participantId));
+        }
+
+        return DomainResult.Success();
+    }
 }

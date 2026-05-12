@@ -11,4 +11,6 @@ public interface IRepository<TDomain>
     Task UpdateAsync(TDomain domainObject, CancellationToken cancellationToken);
 
     Task DeleteAsync(Guid id, CancellationToken cancellationToken);
+
+    Task<bool> ExistsAsync(Guid userId, CancellationToken cancellationToken);
 }

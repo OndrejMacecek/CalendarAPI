@@ -1,7 +1,7 @@
 ﻿using CalendarAPI.Domain.Common;
 
 namespace CalendarAPI.Domain.Calendars.ValueObjects;
-public sealed class EventTimeRange 
+public sealed class EventTimeRange
     : ValueObject
 {
     public DateTimeOffset StartAtUtc { get; }
@@ -18,7 +18,9 @@ public sealed class EventTimeRange
         DateTimeOffset endAtUtc)
     {
         if (endAtUtc <= startAtUtc)
+        {
             return DomainResult<EventTimeRange>.Failure(new("event.invalid_time_range", "Event end must be after event start."));
+        }
 
         return DomainResult<EventTimeRange>.Success(
             new EventTimeRange(startAtUtc, endAtUtc));

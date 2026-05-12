@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Boostrapper\CalendarAPI.Boostrapper.csproj" />
+    <ProjectReference Include="..\Contract\CalendarApi.Contract\CalendarApi.Contract.csproj" />
   </ItemGroup>
 
 </Project>

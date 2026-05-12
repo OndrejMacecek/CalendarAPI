@@ -3,7 +3,8 @@ using CalendarAPI.Infrastructure.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CalendarAPI.Infrastructure.Persistence;
-public abstract class BaseRepository<TDomain, TEntity> : IRepository<TDomain>
+public abstract class BaseRepository<TDomain, TEntity>
+    : IRepository<TDomain>
     where TDomain : DomainEntity
     where TEntity : DbEntity
 {
@@ -25,7 +26,7 @@ public abstract class BaseRepository<TDomain, TEntity> : IRepository<TDomain>
         await DbSet.AddAsync(entity, cancellationToken);
     }
 
-    public async Task<TDomain?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public virtual async Task<TDomain?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var entity = await DbSet
             .AsNoTracking()
@@ -39,13 +40,13 @@ public abstract class BaseRepository<TDomain, TEntity> : IRepository<TDomain>
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<IReadOnlyCollection<TDomain>> GetAllAsync(CancellationToken cancellationToken)
+    public virtual async Task<IReadOnlyCollection<TDomain>> GetAllAsync(CancellationToken cancellationToken)
     {
         var entities = await DbSet.AsNoTracking().ToListAsync(cancellationToken);
         return entities.Select(ToDomain).ToList();
     }
 
-    public async Task UpdateAsync(TDomain domainObject, CancellationToken cancellationToken)
+    public virtual async Task UpdateAsync(TDomain domainObject, CancellationToken cancellationToken)
     {
         var entity = await DbSet
             .FirstOrDefaultAsync(x => x.Id == domainObject.Id, cancellationToken);
@@ -54,8 +55,6 @@ public abstract class BaseRepository<TDomain, TEntity> : IRepository<TDomain>
             return;
 
         MapToExistingEntity(domainObject, entity);
-
-        entity.UpdatedAtUtc = DateTime.UtcNow;
     }
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
@@ -79,4 +78,8 @@ public abstract class BaseRepository<TDomain, TEntity> : IRepository<TDomain>
         TDomain domainObject,
         TEntity entity);
 
+    public Task<bool> ExistsAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        return DbSet.AnyAsync(x => x.Id == userId, cancellationToken);
+    }
 }

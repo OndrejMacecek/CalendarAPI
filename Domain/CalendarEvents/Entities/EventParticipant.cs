@@ -22,14 +22,13 @@ public sealed class EventParticipant
     public static EventParticipant Create(
         Guid eventId,
         Guid userId,
-        EventParticipantStatus status,
         Guid? id = null)
     {
         return new EventParticipant(id ?? Guid.NewGuid())
         {
             EventId = eventId,
             UserId = userId,
-            Status = status,
+            Status = EventParticipantStatus.Invited,
         };
     }
 
@@ -45,5 +44,15 @@ public sealed class EventParticipant
             UserId = userId,
             Status = status,
         };
+    }
+
+    public void Accept()
+    {
+        Status = EventParticipantStatus.Accepted;
+    }
+
+    public void Decline()
+    {
+        Status = EventParticipantStatus.Declined;
     }
 }
