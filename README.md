@@ -66,13 +66,13 @@ Vzhledem k rozsahu úkolu jsem se proto soustředil hlavně na architekturu apli
 Některé části jsou záměrně zjednodušené kvůli časové náročnosti úkolu. Cílem bylo hlavně ukázat návrh architektury, práci s doménovou logikou a oddělení zodpovědností mezi vrstvami aplikace.
 
 ## Co bych řešil v produkční verzi
--propracovanější pozvánky
--opakující se události
--lepší práci s časovými pásmy
--optimalizaci databázových indexů
--oddělení read modelu
--caching
--audit log
--autentizaci a autorizaci
--souběhy requestu
--messaging
+- propracovanější pozvánky
+- opakující se události
+- lepší práci s časovými pásmy
+- optimalizaci databázových indexů
+- oddělení read modelu
+- caching
+- audit log
+- autentizaci a autorizaci
+- souběhy requestu
+- messaging
