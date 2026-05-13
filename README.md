@@ -6,11 +6,11 @@ Technický úkol — Kalendářové API
 
 ## Architektura aplikace
 Aplikaci jsem rozdělil do několika vrstev:
-**Application**
+* **Application**
   Vrstva zodpovědná za aplikační logiku. Validuje vstupní data z REST API, řeší aplikační chyby a určuje pořadí jednotlivých operací. komunikuje s domenou a s persistenci
- **Domain**
+* **Domain**
   Vrstva obsahující business logiku. Jedná se o jádro celé aplikace, které definuje chování jednotlivých entit a agregátů v systému.
-**Persistence**
+* **Persistence**
   Vrstva zajišťující komunikaci s vnějším světem, například s databází, REST API, reportingem nebo messagingem.
 
 Toto rozvrstvení umožňuje paralelní vývoj jednotlivých částí aplikace. Důležité je pouze předem domluvit datové kontrakty mezi vrstvami.
