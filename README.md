@@ -16,7 +16,7 @@ Aplikaci jsem rozdělil do několika vrstev:
 Toto rozvrstvení umožňuje paralelní vývoj jednotlivých částí aplikace. Důležité je pouze předem domluvit datové kontrakty mezi vrstvami.
 
 ## Použité technologie a přístup
-Pro jednoduchost jsem jako úložiště zvolil **SQLite**, které je součástí projektu `CalendarApi`.
+Pro jednoduchost jsem jako úložiště zvolil **SQLite**, které je součástí projektu `CalendarApi`. Jako datovou vstvu jsem požil **Entity Framework Core + migrations.**
 Pro komunikaci mezi aplikační vrstvou a REST API jsem použil **MediatR** spolu s validací pomocí **FluentValidation**.
 MediatR jsem rozdělil na:
 **Commands**
@@ -57,3 +57,22 @@ Toto řešení beru jako výrazně zjednodušené a z pohledu výkonu ne ideáln
 SQLite mě trochu překvapilo tím, že neumí nativně pracovat s `DateTimeOffset`. Proto jsem použil konverzi na `DateTime`.
 Nejsem si ale úplně jistý, zda toto řešení bude správně fungovat při requestech z různých časových pásem. V produkčním řešení by bylo vhodné tuto část důkladněji otestovat a případně ukládat časy jednotně v UTC spolu s informací o časové zóně.
 
+## Opakující se události
+Podpora opakujících se událostí není implementována záměrně.
+Jejich správná implementace výrazně zvyšuje složitost systému — například kvůli úpravám jednotlivých výskytů, mazání části série, časovým pásmům nebo synchronizaci pozvánek a nedostatečnému datovému modelu.
+Vzhledem k rozsahu úkolu jsem se proto soustředil hlavně na architekturu aplikace a základní doménový model.
+
+## Poznámky k návrhu
+Některé části jsou záměrně zjednodušené kvůli časové náročnosti úkolu. Cílem bylo hlavně ukázat návrh architektury, práci s doménovou logikou a oddělení zodpovědností mezi vrstvami aplikace.
+
+## Co bych řešil v produkční verzi
+-propracovanější pozvánky
+-opakující se události
+-lepší práci s časovými pásmy
+-optimalizaci databázových indexů
+-oddělení read modelu
+-caching
+-audit log
+-autentizaci a autorizaci
+-souběhy requestu
+-messaging
