@@ -23,11 +23,7 @@ public class EventTypesController
     public async Task<IActionResult> GetAvailable([FromQuery(Name = "calendar_id")] Guid calendarId, CancellationToken cancellationToken)
     {
         var result = await _sender.Send(new GetAvailableEventTypesQuery(calendarId), cancellationToken);
-
-        if (result.IsFailure)
-            return BadRequest(result.Error);
-
-        return Ok(result.Value);
+        return result.IsFailure ? BadRequest(result.Error) : Ok(result.Value);
     }
 
     [HttpPost]
@@ -41,12 +37,6 @@ public class EventTypesController
             request.CalendarId);
 
         var result = await _sender.Send(command, cancellationToken);
-
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok(new { id = result.Value });
+        return result.IsFailure ? BadRequest(result.Error) : Ok(new { id = result.Value });
     }
 }

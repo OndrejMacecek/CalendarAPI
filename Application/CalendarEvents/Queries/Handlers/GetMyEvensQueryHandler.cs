@@ -5,13 +5,14 @@ using CalendarAPI.Application.Common.Messaging;
 using CalendarAPI.Application.Common.Results;
 
 namespace CalendarAPI.Application.CalendarEvents.Queries.Handlers;
-public sealed class GetMyInvitationsQueryHandler
-    : IQueryHandler<GetMyInvitationsQuery, IReadOnlyCollection<InvitationDto>>
+
+public sealed class GetMyEvensQueryHandler
+    : IQueryHandler<GetMyEventsQuery, IReadOnlyCollection<CalendarEventDto>>
 {
     private readonly ICalendarEventQueryRepository _query;
     private readonly ICurrentUser _currentUser;
 
-    public GetMyInvitationsQueryHandler(
+    public GetMyEvensQueryHandler(
         ICalendarEventQueryRepository query,
         ICurrentUser currentUser)
     {
@@ -19,19 +20,21 @@ public sealed class GetMyInvitationsQueryHandler
         _currentUser = currentUser;
     }
 
-    public async Task<Result<IReadOnlyCollection<InvitationDto>>> Handle(
-        GetMyInvitationsQuery request,
-        CancellationToken cancellationToken)
+    public async Task<Result<IReadOnlyCollection<CalendarEventDto>>> Handle(GetMyEventsQuery request, CancellationToken cancellationToken)
     {
         var userId = _currentUser.UserId;
-
         if (userId == Guid.Empty)
         {
-            return Result<IReadOnlyCollection<InvitationDto>>.Failure(
+            return Result<IReadOnlyCollection<CalendarEventDto>>.Failure(
                 new Error("auth.user_missing", "Missing or invalid user header."));
         }
 
-        var events = await _query.GetInvitationsForUserAsync(userId, cancellationToken);
-        return Result<IReadOnlyCollection<InvitationDto>>.Success(events);
+        var events = await _query.GetVisibleForUserInRangeAsync(
+            userId,
+            request.FromUtc,
+            request.ToUtc,
+            cancellationToken);
+
+        return Result<IReadOnlyCollection<CalendarEventDto>>.Success(events);
     }
 }

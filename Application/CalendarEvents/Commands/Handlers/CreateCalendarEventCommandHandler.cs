@@ -6,6 +6,7 @@ using CalendarAPI.Domain.CalendarEvents.Aggregates;
 using CalendarAPI.Domain.EventTypes.Aggregates;
 
 namespace CalendarAPI.Application.CalendarEvents.Commands.Handlers;
+
 public sealed class CreateCalendarEventCommandHandler
     : ICommandHandler<CreateCalendarEventCommand, Guid>
 {

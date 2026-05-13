@@ -6,8 +6,8 @@ namespace CalendarAPI.Domain.Users.Aggregates;
 public sealed class User
     : DomainAggregate
 {
-    public EmailAddress Email { get; private set; } = null!;
-    public string DisplayName { get; private set; } = null!;
+    public EmailAddress Email { get; private set; } = default!;
+    public string DisplayName { get; private set; } = default!;
 
     private User(Guid id) 
         : base(id) { }

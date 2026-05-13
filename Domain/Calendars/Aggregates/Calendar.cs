@@ -60,21 +60,4 @@ public sealed class Calendar
             TimeZoneId = timeZoneId
         };
     }
-
-    public DomainResult Rename(string name)
-    {
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            return DomainResult.Failure(new("calendar.name_required", "Calendar name is required."));
-        }
-
-        if (name.Length > 100)
-        {
-            return DomainResult.Failure(new("calendar.name_too_long", "Calendar name must be 100 characters or less."));
-        }
-
-        Name = name.Trim();
-
-        return DomainResult.Success();
-    }
 }

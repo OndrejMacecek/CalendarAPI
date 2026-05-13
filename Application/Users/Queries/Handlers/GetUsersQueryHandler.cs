@@ -1,37 +1,24 @@
 ﻿using CalendarAPI.Application.Common.Messaging;
 using CalendarAPI.Application.Common.Results;
+using CalendarAPI.Application.Users.Queries.Repositories;
 using CalendarAPI.Contracts.Responses.Users;
-using CalendarAPI.Domain.Users.Repositories;
 
 namespace CalendarAPI.Application.Users.Queries.Handlers;
 
 public sealed class GetUsersQueryHandler
     : IQueryHandler<GetUsersQuery, IReadOnlyCollection<UserDto>>
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IUserQueryRepository _userQuery;
 
     public GetUsersQueryHandler(
-        IUserRepository userRepository)
+        IUserQueryRepository userQuery)
     {
-        _userRepository = userRepository;
+        _userQuery = userQuery;
     }
 
-    public async Task<Result<IReadOnlyCollection<UserDto>>> Handle(
-        GetUsersQuery request,
-        CancellationToken cancellationToken)
+    public async Task<Result<IReadOnlyCollection<UserDto>>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
     {
-        var users = await _userRepository.GetAllAsync(cancellationToken);
-
-        var result = users
-            .Select(x =>
-                new UserDto
-                {
-                    Id = x.Id,
-                    DisplayName = x.DisplayName,
-                    Email = x.Email.Value,
-                }
-                ).ToList();
-
-        return Result<IReadOnlyCollection<UserDto>>.Success(result);
+        var users = await _userQuery.GetAllUsersdAsync(cancellationToken);
+        return Result<IReadOnlyCollection<UserDto>>.Success(users);
     }
 }

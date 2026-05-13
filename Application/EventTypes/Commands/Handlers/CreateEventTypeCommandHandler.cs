@@ -33,7 +33,7 @@ public sealed class CreateEventTypeCommandHandler
         if (!Enum.TryParse<EventTypeScope>(request.Scope, true, out var scope))
         {
             return Result<Guid>.Failure(
-                new Error("event_type.not_foubt", "Event type doesnt exists."));
+                new Error("event_type.not_foubt", "Event type doesnt exists. (system, user, calendar)"));
         }
 
         if (scope == EventTypeScope.Calendar)

@@ -24,6 +24,11 @@ public sealed class DeleteCalendarEventCommandHandler
     {
         var currentUserId = _currentUser.UserId;
 
+        if (currentUserId == Guid.Empty)
+        {
+            return Result<Guid>.Failure(new Error("auth.user_missing", "Missing or invalid user header."));
+        }
+
         var calendarEvent = await _unitOfWork.CalendarEvents.GetByIdAsync(request.EventId, cancellationToken);
 
         if (calendarEvent is null)

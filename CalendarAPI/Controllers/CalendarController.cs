@@ -1,4 +1,5 @@
-﻿using CalendarAPI.Application.Calendars.Queries;
+﻿using CalendarAPI.Application.CalendarEvents.Queries;
+using CalendarAPI.Application.Calendars.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,44 +22,6 @@ public class CalendarController
     public async Task<IActionResult> GetById(Guid calendarId, CancellationToken cancellationToken)
     {
         var result = await _sender.Send(new GetCalendarByIdQuery(calendarId));
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok(result.Value);
-    }
-
-    [HttpGet("{calendarId:guid}/calendar_events")]
-    public async Task<IActionResult> GetCalendarEvents(
-        Guid calendarId,
-        [FromQuery(Name = "from_utc")] DateTimeOffset fromUtc,
-        [FromQuery(Name = "to_utc")] DateTimeOffset toUtc,
-        CancellationToken cancellationToken)
-    {
-        var result = await _sender.Send(
-            new GetCalendarEventsQuery(calendarId, fromUtc, toUtc),
-            cancellationToken);
-
-        if (result.IsFailure)
-            return BadRequest(result.Error);
-
-        return Ok(result.Value);
-    }
-
-    [HttpGet("my")]
-    public async Task<IActionResult> GetMyEvents(
-        [FromQuery(Name = "from_utc")] DateTimeOffset fromUtc,
-        [FromQuery(Name = "to_utc")] DateTimeOffset toUtc,
-        CancellationToken cancellationToken)
-    {
-        var result = await _sender.Send(new GetMyEventsQuery(fromUtc, toUtc), cancellationToken);
-
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok(result.Value);
+        return result.IsFailure ? BadRequest(result.Error) : Ok(result.Value);
     }
 }

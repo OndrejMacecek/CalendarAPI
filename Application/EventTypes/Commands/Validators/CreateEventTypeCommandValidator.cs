@@ -16,22 +16,12 @@ public sealed class CreateEventTypeCommandValidator
 
         RuleFor(x => x.Scope)
             .NotEmpty()
-            .Must(BeValidScope)
-            .WithMessage("Invalid event type scope.");
+            .Must(x => Enum.TryParse<EventTypeScope>(x, true, out _))
+            .WithMessage("Invalid event type scope. (syste, user, calendar)");
 
         RuleFor(x => x.CalendarId)
             .NotEmpty()
-            .When(x => IsCalendarScope(x.Scope))
+            .When(x => x.Scope.Equals(EventTypeScope.Calendar.ToString(), StringComparison.OrdinalIgnoreCase))
             .WithMessage("Calendar id is required for calendar scope.");
-    }
-
-    private static bool BeValidScope(string scope)
-    {
-        return Enum.TryParse<EventTypeScope>(scope, true, out _);
-    }
-
-    private static bool IsCalendarScope(string scope)
-    {
-        return scope.Equals(EventTypeScope.Calendar.ToString(), StringComparison.OrdinalIgnoreCase);
     }
 }

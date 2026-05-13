@@ -90,7 +90,7 @@ public sealed class UpdateCalendarEventCommandHandler
             await _unitOfWork.CalendarEvents.UpdateAsync(calendarEvent, cancellationToken);
             await _unitOfWork.CommitTransactionAsync(cancellationToken);
         }
-        catch (Exception ex)
+        catch
         {
             await _unitOfWork.RollbackTransactionAsync(cancellationToken);
             throw;

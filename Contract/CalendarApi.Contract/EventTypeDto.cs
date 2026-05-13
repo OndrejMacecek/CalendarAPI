@@ -18,5 +18,11 @@ public record class EventTypeDto
 
     [JsonPropertyName("priority")]
     public int Priority { get; init; }
+
+    [JsonPropertyName("calendar_id")]
+    public Guid? CalendarId { get; init; }
+
+    [JsonPropertyName("user_id")]
+    public Guid? UserId { get; init; }
 }
 

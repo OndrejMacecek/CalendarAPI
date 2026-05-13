@@ -35,7 +35,6 @@ public sealed class DeleteUserCommandHandler
         }
 
         await _unitOfWork.Users.DeleteUserGraphAsync(request.UserId, cancellationToken);
-
         await _unitOfWork.CommitTransactionAsync(cancellationToken);
 
         return Result.Success();

@@ -77,7 +77,6 @@ namespace CalendarAPI.Infrastructure.Migrations
             modelBuilder.Entity("CalendarAPI.Infrastructure.CalendarEvents.EventParticipantEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasColumnName("id");
 

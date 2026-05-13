@@ -29,14 +29,18 @@ public sealed class CreateUserCommandHandler
         var userResult = User.Create(request.email, request.displayName);
 
         if (userResult.IsFailure)
+        {
             return userResult.Error!.ToApplicationFailure<Guid>();
+        }
 
         var user = userResult.Value!;
 
         var calendarResult = Calendar.Create(user.Id, "Default calendar");
 
         if (calendarResult.IsFailure)
+        {
             return calendarResult.Error!.ToApplicationFailure<Guid>();
+        }
 
         await _uow.BeginTransactionAsync(cancellationToken);
 

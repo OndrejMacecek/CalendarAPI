@@ -9,9 +9,7 @@ public sealed class CalendarRepository
     : BaseRepository<Calendar, CalendarEntity>, ICalendarRepository
 {
     public CalendarRepository(AppDbContext context)
-        : base(context)
-    {
-    }
+        : base(context) { }
 
     public async Task<IReadOnlyCollection<Calendar>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken)
     {

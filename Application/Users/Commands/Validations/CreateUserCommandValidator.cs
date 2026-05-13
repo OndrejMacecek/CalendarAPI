@@ -1,9 +1,4 @@
 ﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CalendarAPI.Application.Users.Commands.Validations;
 public sealed class CreateUserCommandValidator
@@ -20,7 +15,6 @@ public sealed class CreateUserCommandValidator
 
         RuleFor(x => x.displayName)
             .NotEmpty()
-            .WithMessage("Display name is required.")
-            .MaximumLength(150);
+            .WithMessage("Display name is required.");
     }
 }

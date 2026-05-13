@@ -28,5 +28,5 @@ public sealed record InvitationDto
     public DateTimeOffset EndAtUtc { get; init; }
 
     [JsonPropertyName("status")]
-    public string Statu { get; init; } = default!;
+    public string Status { get; init; } = default!;
 }

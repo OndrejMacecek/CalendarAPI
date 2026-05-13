@@ -13,4 +13,7 @@ public class UserDto
 
     [JsonPropertyName("display_name")]
     public string DisplayName { get; init; } = default!;
+
+    [JsonPropertyName("calendars")]
+    public IReadOnlyCollection<CalendarDto> Calendars { get; init; } = [];
 }

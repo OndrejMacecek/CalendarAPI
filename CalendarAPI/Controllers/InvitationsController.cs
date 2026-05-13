@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace CalendarAPI.Controllers;
 [ApiController]
 [Route("api/invitations")]
-public sealed class InvitationsController : ControllerBase
+public sealed class InvitationsController 
+    : ControllerBase
 {
     private readonly ISender _sender;
 
@@ -21,28 +22,14 @@ public sealed class InvitationsController : ControllerBase
         CancellationToken cancellationToken)
     {
         var result = await _sender.Send(new GetMyInvitationsQuery(), cancellationToken);
-
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok(result.Value);
+        return result.IsFailure ? BadRequest(result.Error) : Ok(result.Value);
     }
 
     [HttpPut("{eventId:guid}/participation")]
     public async Task<IActionResult> RespondToInvitation(Guid eventId, RespondToEventInvitationRequest request, CancellationToken cancellationToken)
     {
-        var command = new RespondToEventInvitationCommand(eventId, request.Status);
-
-        var result = await _sender.Send(command, cancellationToken);
-
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok();
+        var result = await _sender.Send(new ResponseToEventInvitationCommand(eventId, request.Status), cancellationToken);
+        return result.IsFailure ? BadRequest(result.Error) : Ok();
     }
 
 }

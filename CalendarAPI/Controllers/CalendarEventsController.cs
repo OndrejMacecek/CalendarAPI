@@ -1,14 +1,15 @@
 ﻿using CalendarAPI.Application.CalendarEvents.Commands;
+using CalendarAPI.Application.CalendarEvents.Queries;
 using CalendarAPI.Contracts.Requests.CalendarEvents;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace CalendarAPI.Controllers;
 
 [ApiController]
 [Route("api/calendar-events")]
-public sealed class CalendarEventsController : ControllerBase
+public sealed class CalendarEventsController 
+    : ControllerBase
 {
     private readonly ISender _sender;
 
@@ -18,9 +19,7 @@ public sealed class CalendarEventsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(
-        CreateCalendarEventRequest request,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> Create(CreateCalendarEventRequest request, CancellationToken cancellationToken)
     {
         var command = new CreateCalendarEventCommand(
             request.CalendarId,
@@ -32,13 +31,7 @@ public sealed class CalendarEventsController : ControllerBase
             request.ParticipantIds);
 
         var result = await _sender.Send(command, cancellationToken);
-
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok(new { id = result.Value });
+        return result.IsFailure ? BadRequest(result.Error) : Ok(new { id = result.Value });
     }
 
     [HttpPut("{eventId:guid}")]
@@ -55,27 +48,34 @@ public sealed class CalendarEventsController : ControllerBase
             request.ParticipantIds);
 
         var result = await _sender.Send(command, cancellationToken);
-
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return Ok();
+        return result.IsFailure ? BadRequest(result.Error) : Ok();
     }
 
     [HttpDelete("{eventId:guid}")]
-    public async Task<IActionResult> Delete(
-    Guid eventId,
-    CancellationToken cancellationToken)
+    public async Task<IActionResult> Delete(Guid eventId, CancellationToken cancellationToken)
     {
         var result = await _sender.Send(new DeleteCalendarEventCommand(eventId), cancellationToken);
+        return result.IsFailure ? BadRequest(result.Error) : Ok(result);
+    }
 
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
+    [HttpGet("{calendarId:guid}/calendar_events")]
+    public async Task<IActionResult> GetCalendarEvents(
+        Guid calendarId,
+        [FromQuery(Name = "from_utc")] DateTimeOffset fromUtc,
+        [FromQuery(Name = "to_utc")] DateTimeOffset toUtc,
+    CancellationToken cancellationToken)
+    {
+        var result = await _sender.Send(new GetCalendarEventsQuery(calendarId, fromUtc, toUtc), cancellationToken);
+        return result.IsFailure ? BadRequest(result.Error) : Ok(result.Value);
+    }
 
-        return Ok(result);
+    [HttpGet("my")]
+    public async Task<IActionResult> GetMyEvents(
+        [FromQuery(Name = "from_utc")] DateTimeOffset fromUtc,
+        [FromQuery(Name = "to_utc")] DateTimeOffset toUtc,
+        CancellationToken cancellationToken)
+    {
+        var result = await _sender.Send(new GetMyEventsQuery(fromUtc, toUtc), cancellationToken);
+        return result.IsFailure ? BadRequest(result.Error) : Ok(result.Value);
     }
 }

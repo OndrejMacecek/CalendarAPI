@@ -3,7 +3,8 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace CalendarAPI.Infrastructure.Persistence;
 
-public abstract class UnitOfWork : IUnitOfWork
+public abstract class UnitOfWork 
+    : IUnitOfWork
 {
     private readonly AppDbContext _context;
     private IDbContextTransaction? _transaction;

@@ -5,7 +5,8 @@ using CalendarAPI.Infrastructure.Users;
 
 namespace CalendarAPI.Infrastructure.CalendarEvents;
 
-public sealed class CalendarEventEntity : DbEntity
+public sealed class CalendarEventEntity 
+    : DbEntity
 {
     public Guid CalendarId { get; set; }
     public CalendarEntity Calendar { get; set; } = default!;

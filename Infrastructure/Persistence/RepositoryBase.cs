@@ -17,12 +17,9 @@ public abstract class BaseRepository<TDomain, TEntity>
         DbSet = context.Set<TEntity>();
     }
 
-    public async Task AddAsync(TDomain domainObject, CancellationToken cancellationToken)
+    public async Task AddAsync(TDomain domain, CancellationToken cancellationToken)
     {
-        var entity = ToEntity(domainObject);
-
-        entity.CreatedAtUtc = DateTime.UtcNow;
-
+        var entity = ToEntity(domain);
         await DbSet.AddAsync(entity, cancellationToken);
     }
 
@@ -46,15 +43,21 @@ public abstract class BaseRepository<TDomain, TEntity>
         return entities.Select(ToDomain).ToList();
     }
 
-    public virtual async Task UpdateAsync(TDomain domainObject, CancellationToken cancellationToken)
+    public virtual async Task UpdateAsync(TDomain domain, CancellationToken cancellationToken)
     {
-        var entity = await DbSet
-            .FirstOrDefaultAsync(x => x.Id == domainObject.Id, cancellationToken);
+        var entity = await DbSet.FirstOrDefaultAsync(x => x.Id == domain.Id, cancellationToken);
 
         if (entity is null)
+        {
             return;
+        }
 
-        MapToExistingEntity(domainObject, entity);
+        MapToExistingEntity(domain, entity);
+    }
+
+    public Task<bool> ExistsAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        return DbSet.AnyAsync(x => x.Id == userId, cancellationToken);
     }
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
@@ -70,16 +73,9 @@ public abstract class BaseRepository<TDomain, TEntity>
         DbSet.Remove(entity);
     }
 
-    protected abstract TEntity ToEntity(TDomain domainObject);
+    protected abstract TEntity ToEntity(TDomain domain);
 
     protected abstract TDomain ToDomain(TEntity entity);
 
-    protected abstract void MapToExistingEntity(
-        TDomain domainObject,
-        TEntity entity);
-
-    public Task<bool> ExistsAsync(Guid userId, CancellationToken cancellationToken)
-    {
-        return DbSet.AnyAsync(x => x.Id == userId, cancellationToken);
-    }
+    protected abstract void MapToExistingEntity(TDomain domain, TEntity entity);
 }

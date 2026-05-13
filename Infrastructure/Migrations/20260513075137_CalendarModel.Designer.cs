@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CalendarAPI.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260512141107_CalendarModel")]
+    [Migration("20260513075137_CalendarModel")]
     partial class CalendarModel
     {
         /// <inheritdoc />
@@ -80,7 +80,6 @@ namespace CalendarAPI.Infrastructure.Migrations
             modelBuilder.Entity("CalendarAPI.Infrastructure.CalendarEvents.EventParticipantEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasColumnName("id");
 

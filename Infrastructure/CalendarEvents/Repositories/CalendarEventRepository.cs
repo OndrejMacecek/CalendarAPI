@@ -41,57 +41,6 @@ public sealed class CalendarEventRepository
         MapToExistingEntity(domain, entity);
     }
 
-    public async Task<IReadOnlyCollection<CalendarEvent>> GetByCalendarIdInRangeAsync(
-        Guid calendarId, DateTimeOffset fromUtc, DateTimeOffset toUtc, CancellationToken cancellationToken)
-    {
-        var from = fromUtc.UtcDateTime;
-        var to = toUtc.UtcDateTime;
-
-        var entities = await DbSet
-            .AsNoTracking()
-            .Include(x => x.Participants)
-            .Where(x =>
-                x.CalendarId == calendarId &&
-                x.StartAtUtc < to &&
-                x.EndAtUtc > from)
-            .ToListAsync(cancellationToken);
-
-        return entities.Select(ToDomain).ToList();
-    }
-
-    public async Task<IReadOnlyCollection<CalendarEvent>> GetVisibleForUserInRangeAsync(
-        Guid userId, DateTimeOffset fromUtc, DateTimeOffset toUtc, CancellationToken cancellationToken)
-    {
-        var from = fromUtc.UtcDateTime;
-        var to = toUtc.UtcDateTime;
-
-        var entities = await DbSet
-            .AsNoTracking()
-            .Include(x => x.Participants)
-            .Where(x =>
-                x.StartAtUtc < to &&
-                x.EndAtUtc > from &&
-                (
-                    x.OwnerUserId == userId ||
-                    x.Participants.Any(p =>
-                        p.UserId == userId &&
-                        p.Status != EventParticipantStatus.Declined)
-                ))
-            .ToListAsync(cancellationToken);
-
-        return entities.Select(ToDomain).ToList();
-    }
-
-    public async Task<IReadOnlyCollection<CalendarEvent>> GetInvitationsForUserAsync(Guid userId, CancellationToken cancellationToken)
-    {
-        var entities = await DbSet.AsNoTracking()
-            .Include(x => x.Participants)
-            .Where(x => x.Participants.Any(p => p.UserId == userId))
-            .ToListAsync(cancellationToken);
-
-        return entities.Select(ToDomain).ToList();
-    }
-
     public async Task<bool> HasConflictAsync(
         Guid userId, DateTimeOffset startAtUtc, DateTimeOffset endAtUtc, Guid? ignoredEventId, CancellationToken cancellationToken)
     {

@@ -1,13 +1,9 @@
 ﻿using CalendarAPI.Application.Common.Interfaces;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CalendarAPI.Application.Common;
-public sealed class CurrentUser : ICurrentUser
+public sealed class CurrentUser 
+    : ICurrentUser
 {
     public Guid UserId { get; }
 

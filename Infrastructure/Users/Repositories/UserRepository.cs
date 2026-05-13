@@ -11,6 +11,15 @@ internal class UserRepository
     public UserRepository(AppDbContext context)
         : base(context) { }
 
+    public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
+    {
+        var entity = await DbSet
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
+
+        return entity is null ? null : ToDomain(entity);
+    }
+
     public async Task DeleteUserGraphAsync(Guid userId, CancellationToken cancellationToken)
     {
         var user = await Context.Users
@@ -29,15 +38,6 @@ internal class UserRepository
         Context.Set<EventParticipantEntity>().RemoveRange(participantRows);
 
         Context.Users.Remove(user);
-    }
-
-    public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
-    {
-        var entity = await DbSet
-            .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
-
-        return entity is null ? null : ToDomain(entity);
     }
 
     protected override void MapToExistingEntity(User domain, UserEntity entity)

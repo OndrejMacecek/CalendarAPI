@@ -8,7 +8,7 @@ using CalendarAPI.Domain.Common;
 namespace CalendarAPI.Application.CalendarEvents.Commands.Handlers;
 
 public sealed class RespondToEventInvitationCommandHandler
-    : ICommandHandler<RespondToEventInvitationCommand>
+    : ICommandHandler<ResponseToEventInvitationCommand>
 {
     private readonly ICalendarApiUnitOfWork _uow;
     private readonly ICurrentUser _currentUser;
@@ -21,15 +21,21 @@ public sealed class RespondToEventInvitationCommandHandler
         _currentUser = currentUser;
     }
 
-    public async Task<Result> Handle(RespondToEventInvitationCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(ResponseToEventInvitationCommand request, CancellationToken cancellationToken)
     {
+        var currentUserId = _currentUser.UserId;
+
+        if (currentUserId == Guid.Empty)
+        {
+            return Result<Guid>.Failure(new Error("auth.user_missing", "Missing or invalid user header."));
+        }
+
         var calendarEvent = await _uow.CalendarEvents.GetByIdAsync(request.EventId, cancellationToken);
 
         if (calendarEvent is null)
+        {
             return Result.Failure(new Error("event.not_found", "Event was not found."));
-
-        var userId = _currentUser.UserId;
-
+        }
 
         if (!Enum.TryParse<EventParticipantStatus>(request.Status, true, out var status))
         {
@@ -39,8 +45,8 @@ public sealed class RespondToEventInvitationCommandHandler
 
         var result = status switch
         {
-            EventParticipantStatus.Accepted => calendarEvent.AcceptInvitation(userId),
-            EventParticipantStatus.Declined => calendarEvent.DeclineInvitation(userId),
+            EventParticipantStatus.Accepted => calendarEvent.AcceptInvitation(currentUserId),
+            EventParticipantStatus.Declined => calendarEvent.DeclineInvitation(currentUserId),
             _ => DomainResult.Failure(new DomainError("invitation.invalid_status", "Status must be accepted or declined."))
         };
 
