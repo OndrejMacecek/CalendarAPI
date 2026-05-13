@@ -76,3 +76,4 @@ Některé části jsou záměrně zjednodušené kvůli časové náročnosti ú
 - autentizaci a autorizaci
 - souběhy requestu
 - messaging
+- HLAVNĚ CHYBÍ TESTY! :D
